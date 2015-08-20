@@ -172,7 +172,7 @@ parseConfig(const char *fileName)
 				ezConfig.format = xstrdup(ls_xmlContentPtr);
 				xmlFree(ls_xmlContentPtr);
 				for (p = ezConfig.format; *p != '\0'; p++)
-					*p = toupper((int)*p);
+				    *p = (char)toupper((int)*p);
 			}
 		}
 		if (!xmlStrcmp(cur->name, (const xmlChar *)"filename")) {
@@ -244,7 +244,7 @@ parseConfig(const char *fileName)
 			if (cur->xmlChildrenNode != NULL) {
 				const char *errstr;
 				ls_xmlContentPtr = (char *)xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-				ezConfig.metadataRefreshInterval = (unsigned int)strtonum(ls_xmlContentPtr, -1LL, (long long)INT_MAX, &errstr);
+				ezConfig.metadataRefreshInterval = (int)(unsigned int)strtonum(ls_xmlContentPtr, -1LL, (long long)INT_MAX, &errstr);
 				if (errstr) {
 					printf("%s[%ld]: Error: In <metadata_refreshinterval>: '%s' is %s\n",
 					       fileName, xmlGetLineNo(cur), ls_xmlContentPtr, errstr);
@@ -521,7 +521,7 @@ parseConfig(const char *fileName)
 								pformatEncDec->format = xstrdup(ls_xmlContentPtr);
 								xmlFree(ls_xmlContentPtr);
 								for (p = pformatEncDec->format; *p != '\0'; p++)
-									*p = toupper((int)*p);
+								    *p = (char)toupper((int)*p);
 							}
 						}
 						if (!xmlStrcmp(cur3->name, (const xmlChar *)"match")) {
@@ -538,7 +538,7 @@ parseConfig(const char *fileName)
 								pformatEncDec->match = xstrdup(ls_xmlContentPtr);
 								xmlFree(ls_xmlContentPtr);
 								for (p = pformatEncDec->match; *p != '\0'; p++)
-									*p = tolower((int)*p);
+								    *p = (char)tolower((int)*p);
 							}
 						}
 						if (!xmlStrcmp(cur3->name, (const xmlChar *)"decode")) {

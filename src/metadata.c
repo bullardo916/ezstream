@@ -290,7 +290,7 @@ metadata_get_extension(char *buf, size_t siz, const char *filename)
 	else
 		buf[0] = '\0';
 	for (p = buf; *p != '\0'; p++)
-		*p = tolower((int)*p);
+	    *p = (char)tolower((int)*p);
 }
 
 char *

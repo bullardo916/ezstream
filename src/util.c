@@ -75,10 +75,10 @@ strrcasecmp(const char *s, const char *sub)
 	int	 ret;
 
 	for (p = s_cpy; *p != '\0'; p++)
-		*p = tolower((int)*p);
+	    *p = (char)tolower((int)*p);
 
 	for (p = sub_cpy; *p != '\0'; p++)
-		*p = tolower((int)*p);
+	    *p = (char)tolower((int)*p);
 
 	ret = strrcmp(s_cpy, sub_cpy);
 
@@ -314,7 +314,7 @@ iconvert(const char *in_str, const char *from, const char *to, int mode)
 		return (xstrdup(in_str));
 	}
 
-	ip = input = (ICONV_CONST char *)in_str;
+	ip = input = xstrdup(in_str);//(ICONV_CONST char *)in_str;	
 	input_len = strlen(input);
 	output_size = 1;
 	output = xcalloc(output_size, sizeof(char));

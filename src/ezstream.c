@@ -168,7 +168,7 @@ urlParse(const char *url, char **hostname, unsigned short *port,
 		       __progname);
 		return (0);
 	}
-	hostsiz = (p2 - p1) + 1;
+	hostsiz = (size_t)(p2 - p1) + 1;
 	*hostname = xmalloc(hostsiz);
 	strlcpy(*hostname, p1, hostsiz);
 
@@ -181,7 +181,7 @@ urlParse(const char *url, char **hostname, unsigned short *port,
 		return (0);
 	}
 
-	strlcpy(tmpPort, p2, (p3 - p2) + 1UL);
+	strlcpy(tmpPort, p2, (size_t)(p3 - p2) + 1UL);
 	*port = (unsigned short)strtonum(tmpPort, 1LL, (long long)USHRT_MAX, &errstr);
 	if (errstr) {
 		printf("%s: Error: Invalid <url>: Port '%s' is %s\n",
@@ -601,7 +601,7 @@ openResource(shout_t *shout, const char *fileName, int *popenFlag,
 	if (p != NULL)
 		strlcpy(extension, p, sizeof(extension));
 	for (p = extension; *p != '\0'; p++)
-		*p = tolower((int)*p);
+	    *p = (char)tolower((int)*p);
 
 	if (strlen(extension) == 0) {
 		printf("%s: Error: Cannot determine file type of '%s'\n",
