@@ -1,4 +1,4 @@
-/*	$Id: strlcat.c 15788 2009-03-17 18:20:58Z moritz $	*/
+/*	$Id$	*/
 /*	$OpenBSD: strlcat.c,v 1.13 2005/08/08 08:05:37 espie Exp $	*/
 
 /*

@@ -1,4 +1,4 @@
-dnl # $Id: tree.m4 16149 2009-06-21 14:21:32Z moritz $
+dnl # $Id$
 
 dnl # Check for sys/tree.h and if it is recent enough by looking at a certain
 dnl # macro. Defines HAVE_SYS_TREE_H if all conditions are met.

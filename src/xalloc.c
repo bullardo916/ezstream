@@ -1,6 +1,6 @@
-/*	$Id: xalloc.c 15794 2009-03-18 09:10:28Z moritz $	*/
+/*	$Id$	*/
 /*
- * Copyright (C) 2007  Moritz Grimm <mdgrimm@gmx.net>
+ * Copyright (C) 2007  Moritz Grimm <mgrimm@mrsserver.net>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above

@@ -1,4 +1,4 @@
-dnl # $Id: progname.m4 16149 2009-06-21 14:21:32Z moritz $
+dnl # $Id$
 
 dnl # Check whether libc defines __progname. Defines HAVE___PROGNAME, if
 dnl # applicable. This check is heavily inspired by the one in OpenNTPd

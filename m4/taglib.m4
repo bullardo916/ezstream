@@ -1,4 +1,4 @@
-dnl # $Id: taglib.m4 16382 2009-08-01 16:32:14Z moritz $
+dnl # $Id$
 
 dnl # Check for working installations of TagLib and its C-wrapper library,
 dnl # libtag_c.

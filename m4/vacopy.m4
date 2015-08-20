@@ -1,4 +1,4 @@
-dnl # $Id: vacopy.m4 16149 2009-06-21 14:21:32Z moritz $
+dnl # $Id$
 
 dnl # Check for means to copy variable argument lists. After this check,
 dnl # va_copy will at least be defined to something working.

@@ -1,4 +1,4 @@
-dnl # $Id: vars.m4 16149 2009-06-21 14:21:32Z moritz $
+dnl # $Id$
 
 dnl # Append or prepend items to a variable, but keep the items in the
 dnl # variable unique.

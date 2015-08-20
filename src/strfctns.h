@@ -1,4 +1,4 @@
-/*	$Id: strfctns.h 15788 2009-03-17 18:20:58Z moritz $	*/
+/*	$Id$	*/
 
 #ifndef __STRLFCTNS_H__
 #define __STRLFCTNS_H__

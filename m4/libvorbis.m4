@@ -1,4 +1,4 @@
-dnl $Id: libvorbis.m4 16373 2009-08-01 13:46:39Z moritz $
+dnl $Id$
 
 dnl # Check for working installations of libvorbis, libvorbisfile and
 dnl # libvorbisenc.

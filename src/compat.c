@@ -1,4 +1,4 @@
-/*	$Id: compat.c 15798 2009-03-18 20:24:35Z moritz $	*/
+/*	$Id$	*/
 
 #ifdef HAVE_CONFIG_H
 # include "config.h"

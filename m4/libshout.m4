@@ -1,4 +1,4 @@
-dnl # $Id: libshout.m4 16380 2009-08-01 16:08:45Z moritz $
+dnl # $Id$
 
 dnl # Check for a working installation of libshout.
 dnl # Provides appropriate --with configuration options, fills the

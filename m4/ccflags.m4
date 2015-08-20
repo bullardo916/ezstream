@@ -1,4 +1,4 @@
-dnl # $Id: ccflags.m4 16373 2009-08-01 13:46:39Z moritz $
+dnl # $Id$
 
 dnl # * Check if the compiler understands a certain flag or not.
 dnl #   Inspiration for this came from watching TagLib configure.
