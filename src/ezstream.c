@@ -1118,260 +1118,261 @@ usageHelp(void)
 	printf("See the ezstream(1) manual for detailed information.\n");
 }
 
-int
-main(int argc, char *argv[])
+int			main(int argc, char **argv)
 {
-	int		 c;
-	char		*configFile = NULL;
-	char		*host = NULL;
-	unsigned short	 port = 0;
-	char		*mount = NULL;
-	shout_t 	*shout;
-	extern char	*optarg;
-	extern int	 optind;
+    int			c;
+    char		*configFile = NULL;
+    char		*host = NULL;
+    unsigned short	 port = 0;
+    char		*mount = NULL;
+    shout_t		*shout;
+    extern char		*optarg;
+    extern int		optind;
+
 #ifdef HAVE_SIGNALS
-	struct sigaction act;
-	unsigned int	 i;
+    struct sigaction	act;
+    unsigned int	i;
 #endif
 
 #ifdef XALLOC_DEBUG
-	xalloc_initialize_debug(2, NULL);
+    xalloc_initialize_debug(2, NULL);
 #else
-	xalloc_initialize();
+    xalloc_initialize();
 #endif /* XALLOC_DEBUG */
-	playlist_init();
-	shout_init();
 
-	__progname = getProgname(argv[0]);
-	pezConfig = getEZConfig();
+    playlist_init();
+    shout_init();
 
-	mFlag = 0;
-	nFlag = 0;
-	qFlag = 0;
-	vFlag = 0;
+    __progname = getProgname(argv[0]);
+    pezConfig = getEZConfig();
 
-	while ((c = local_getopt(argc, argv, "c:hmnqsVv")) != -1) {
-		switch (c) {
-		case 'c':
-			if (configFile != NULL) {
-				printf("Error: multiple -c arguments given\n");
-				usage();
-				return (ez_shutdown(2));
-			}
-			configFile = xstrdup(optarg);
-			break;
-		case 'h':
-			usage();
-			usageHelp();
-			return (ez_shutdown(0));
-		case 'm':
-			mFlag = 1;
-			break;
-		case 'n':
-			nFlag = 1;
-			break;
-		case 'q':
-			qFlag = 1;
-			break;
-		case 's':
-			sFlag = 1;
-			break;
-		case 'V':
-			printf("%s\n", PACKAGE_STRING);
-			return (ez_shutdown(0));
-		case 'v':
-			vFlag++;
-			break;
-		case '?':
-			usage();
-			return (ez_shutdown(2));
-		default:
-			break;
-		}
-	}
-	argc -= optind;
-	argv += optind;
+    mFlag = 0;
+    nFlag = 0;
+    qFlag = 0;
+    vFlag = 0;
 
-	if (sFlag) {
-		playlist_t	*pl;
-		const char	*entry;
-
-		switch (argc) {
-		case 0:
-			pl = playlist_read(NULL);
-			if (pl == NULL)
-				return (ez_shutdown(1));
-			break;
-		case 1:
-			pl = playlist_read(argv[0]);
-			if (pl == NULL)
-				return (ez_shutdown(1));
-			break;
-		default:
-			printf("Error: Too many arguments.\n");
-			return (ez_shutdown(2));
-		}
-
-		playlist_shuffle(pl);
-		while ((entry = playlist_get_next(pl)) != NULL)
-			printf("%s\n", entry);
-
-		playlist_free(&pl);
-
-		return (ez_shutdown(0));
-	}
-
-	if (configFile == NULL) {
-		printf("You must supply a config file with the -c argument.\n");
+    while ((c = local_getopt(argc, argv, "c:hmnqsVv")) != -1) {
+	switch (c) {
+	case 'c':
+	    if (configFile != NULL) {
+		printf("Error: multiple -c arguments given\n");
 		usage();
 		return (ez_shutdown(2));
-	} else {
+	    }
+	    configFile = xstrdup(optarg);
+	    break;
+	case 'h':
+	    usage();
+	    usageHelp();
+	    return (ez_shutdown(0));
+	case 'm':
+	    mFlag = 1;
+	    break;
+	case 'n':
+	    nFlag = 1;
+	    break;
+	case 'q':
+	    qFlag = 1;
+	    break;
+	case 's':
+	    sFlag = 1;
+	    break;
+	case 'V':
+	    printf("%s\n", PACKAGE_STRING);
+	    return (ez_shutdown(0));
+	case 'v':
+	    vFlag++;
+	    break;
+	case '?':
+	    usage();
+	    return (ez_shutdown(2));
+	default:
+	    break;
+	}
+    }
+    argc -= optind;
+    argv += optind;
+
+    if (sFlag) {
+	playlist_t	*pl;
+	const char	*entry;
+
+	switch (argc) {
+	case 0:
+	    pl = playlist_read(NULL);
+	    if (pl == NULL)
+		return (ez_shutdown(1));
+	    break;
+	case 1:
+	    pl = playlist_read(argv[0]);
+	    if (pl == NULL)
+		return (ez_shutdown(1));
+	    break;
+	default:
+	    printf("Error: Too many arguments.\n");
+	    return (ez_shutdown(2));
+	}
+
+	playlist_shuffle(pl);
+	while ((entry = playlist_get_next(pl)) != NULL)
+	    printf("%s\n", entry);
+
+	playlist_free(&pl);
+
+	return (ez_shutdown(0));
+    }
+
+    if (configFile == NULL) {
+	printf("You must supply a config file with the -c argument.\n");
+	usage();
+	return (ez_shutdown(2));
+    } else {
 		/*
 		 * Attempt to open configFile here for a more meaningful error
 		 * message. Where possible, do it with stat() and check for
 		 * safe config file permissions.
 		 */
 #ifdef HAVE_STAT
-		struct stat	  st;
+	struct stat	  st;
 
-		if (stat(configFile, &st) == -1) {
-			printf("%s: %s\n", configFile, strerror(errno));
-			usage();
-			return (ez_shutdown(2));
-		}
-		if (vFlag && (st.st_mode & (S_IRGRP | S_IROTH)))
-			printf("%s: Warning: %s is group and/or world readable\n",
-			       __progname, configFile);
-		if (st.st_mode & (S_IWGRP | S_IWOTH)) {
-			printf("%s: Error: %s is group and/or world writeable\n",
-			       __progname, configFile);
-			return (ez_shutdown(2));
-		}
+	if (stat(configFile, &st) == -1) {
+	    printf("%s: %s\n", configFile, strerror(errno));
+	    usage();
+	    return (ez_shutdown(2));
+	}
+	if (vFlag && (st.st_mode & (S_IRGRP | S_IROTH)))
+	    printf("%s: Warning: %s is group and/or world readable\n",
+		   __progname, configFile);
+	if (st.st_mode & (S_IWGRP | S_IWOTH)) {
+	    printf("%s: Error: %s is group and/or world writeable\n",
+		   __progname, configFile);
+	    return (ez_shutdown(2));
+	}
 #else
-		FILE		 *tmp;
+	FILE		 *tmp;
 
-		if ((tmp = fopen(configFile, "r")) == NULL) {
-			printf("%s: %s\n", configFile, strerror(errno));
-			usage();
-			return (ez_shutdown(2));
-		}
-		fclose(tmp);
+	if ((tmp = fopen(configFile, "r")) == NULL) {
+	    printf("%s: %s\n", configFile, strerror(errno));
+	    usage();
+	    return (ez_shutdown(2));
+	}
+	fclose(tmp);
 #endif /* HAVE_STAT */
-	}
+    }
 
-	if (!parseConfig(configFile))
-		return (ez_shutdown(2));
+    if (!parseConfig(configFile))
+	return (ez_shutdown(2));
 
-	if (pezConfig->URL == NULL) {
-		printf("%s: Error: Missing <url>\n", configFile);
-		return (ez_shutdown(2));
-	}
-	if (!urlParse(pezConfig->URL, &host, &port, &mount)) {
-		printf("Must be of the form ``http://server:port/mountpoint''\n");
-		return (ez_shutdown(2));
-	}
-	if (strlen(host) == 0) {
-		printf("%s: Error: Invalid <url>: Missing server:\n", configFile);
-		printf("Must be of the form ``http://server:port/mountpoint''\n");
-		return (ez_shutdown(2));
-	}
-	if (strlen(mount) == 0) {
-		printf("%s: Error: Invalid <url>: Missing mountpoint:\n", configFile);
-		printf("Must be of the form ``http://server:port/mountpoint''\n");
-		return (ez_shutdown(2));
-	}
-	if (pezConfig->password == NULL) {
-		printf("%s: Error: Missing <sourcepassword>\n", configFile);
-		return (ez_shutdown(2));
-	}
-	if (pezConfig->fileName == NULL) {
-		printf("%s: Error: Missing <filename>\n", configFile);
-		return (ez_shutdown(2));
-	}
-	if (pezConfig->format == NULL) {
-		printf("%s: Warning: Missing <format>:\n", configFile);
-		printf("Specify a stream format of either MP3, VORBIS or THEORA\n");
-	}
+    if (pezConfig->URL == NULL) {
+	printf("%s: Error: Missing <url>\n", configFile);
+	return (ez_shutdown(2));
+    }
+    if (!urlParse(pezConfig->URL, &host, &port, &mount)) {
+	printf("Must be of the form ``http://server:port/mountpoint''\n");
+	return (ez_shutdown(2));
+    }
+    if (strlen(host) == 0) {
+	printf("%s: Error: Invalid <url>: Missing server:\n", configFile);
+	printf("Must be of the form ``http://server:port/mountpoint''\n");
+	return (ez_shutdown(2));
+    }
+    if (strlen(mount) == 0) {
+	printf("%s: Error: Invalid <url>: Missing mountpoint:\n", configFile);
+	printf("Must be of the form ``http://server:port/mountpoint''\n");
+	return (ez_shutdown(2));
+    }
+    if (pezConfig->password == NULL) {
+	printf("%s: Error: Missing <sourcepassword>\n", configFile);
+	return (ez_shutdown(2));
+    }
+    if (pezConfig->fileName == NULL) {
+	printf("%s: Error: Missing <filename>\n", configFile);
+	return (ez_shutdown(2));
+    }
+    if (pezConfig->format == NULL) {
+	printf("%s: Warning: Missing <format>:\n", configFile);
+	printf("Specify a stream format of either MP3, VORBIS or THEORA\n");
+    }
 
-	xfree(configFile);
+    xfree(configFile);
 
-	if ((shout = stream_setup(host, port, mount)) == NULL)
-		return (ez_shutdown(1));
+    if ((shout = stream_setup(host, port, mount)) == NULL)
+	return (ez_shutdown(1));
 
-	if (pezConfig->metadataProgram != NULL)
-		metadataFromProgram = 1;
-	else
-		metadataFromProgram = 0;
+    if (pezConfig->metadataProgram != NULL)
+	metadataFromProgram = 1;
+    else
+	metadataFromProgram = 0;
 
 #ifdef HAVE_SIGNALS
-	memset(&act, 0, sizeof(act));
-	act.sa_handler = sig_handler;
+    memset(&act, 0, sizeof(act));
+    act.sa_handler = sig_handler;
 # ifdef SA_RESTART
-	act.sa_flags = SA_RESTART;
+    act.sa_flags = SA_RESTART;
 # endif
-	for (i = 0; i < sizeof(ezstream_signals) / sizeof(int); i++) {
-		if (sigaction(ezstream_signals[i], &act, NULL) == -1) {
-			printf("%s: sigaction(): %s\n",
-			       __progname, strerror(errno));
-			return (ez_shutdown(1));
-		}
+    for (i = 0; i < sizeof(ezstream_signals) / sizeof(int); i++) {
+	if (sigaction(ezstream_signals[i], &act, NULL) == -1) {
+	    printf("%s: sigaction(): %s\n",
+		   __progname, strerror(errno));
+	    return (ez_shutdown(1));
 	}
-	/*
-	 * Ignore SIGPIPE, which has been seen to give a long-running ezstream
-	 * process trouble. EOF and/or EPIPE are also easier to handle.
-	 */
-	act.sa_handler = SIG_IGN;
-	if (sigaction(SIGPIPE, &act, NULL) == -1) {
-		printf("%s: sigaction(): %s\n",
-		       __progname, strerror(errno));
-		return (ez_shutdown(1));
-	}
+    }
+    /*
+     * Ignore SIGPIPE, which has been seen to give a long-running ezstream
+     * process trouble. EOF and/or EPIPE are also easier to handle.
+     */
+    act.sa_handler = SIG_IGN;
+    if (sigaction(SIGPIPE, &act, NULL) == -1) {
+	printf("%s: sigaction(): %s\n",
+	       __progname, strerror(errno));
+	return (ez_shutdown(1));
+    }
 #endif /* HAVE_SIGNALS */
 
-	if (shout_open(shout) == SHOUTERR_SUCCESS) {
-		int	ret;
+    if (shout_open(shout) == SHOUTERR_SUCCESS) {
+	int	ret;
 
-		printf("%s: Connected to http://%s:%hu%s\n", __progname,
-		       host, port, mount);
+	printf("%s: Connected to http://%s:%hu%s\n", __progname,
+	       host, port, mount);
 
-		if (pezConfig->fileNameIsProgram ||
-		    strrcasecmp(pezConfig->fileName, ".m3u") == 0 ||
-		    strrcasecmp(pezConfig->fileName, ".txt") == 0)
-			playlistMode = 1;
-		else
-			playlistMode = 0;
+	if (pezConfig->fileNameIsProgram ||
+	    strrcasecmp(pezConfig->fileName, ".m3u") == 0 ||
+	    strrcasecmp(pezConfig->fileName, ".txt") == 0)
+	    playlistMode = 1;
+	else
+	    playlistMode = 0;
 
-		if (vFlag && pezConfig->fileNameIsProgram)
-			printf("%s: Using program '%s' to get filenames for streaming\n",
-			       __progname, pezConfig->fileName);
+	if (vFlag && pezConfig->fileNameIsProgram)
+	    printf("%s: Using program '%s' to get filenames for streaming\n",
+		   __progname, pezConfig->fileName);
 
-		do {
-			if (playlistMode) {
-				ret = streamPlaylist(shout,
-						     pezConfig->fileName);
-			} else {
-				ret = streamFile(shout, pezConfig->fileName);
-			}
-			if (quit)
-				break;
-			if (pezConfig->streamOnce)
-				break;
-		} while (ret);
+	do {
+	    if (playlistMode) {
+		ret = streamPlaylist(shout,
+				     pezConfig->fileName);
+	    } else {
+		ret = streamFile(shout, pezConfig->fileName);
+	    }
+	    if (quit)
+		break;
+	    if (pezConfig->streamOnce)
+		break;
+	} while (ret);
 
-		shout_close(shout);
-	} else
-		printf("%s: Connection to http://%s:%hu%s failed: %s\n", __progname,
-		       host, port, mount, shout_get_error(shout));
+	shout_close(shout);
+    } else
+	printf("%s: Connection to http://%s:%hu%s failed: %s\n", __progname,
+	       host, port, mount, shout_get_error(shout));
 
-	if (quit)
-		printf("\r%s: SIGINT or SIGTERM received\n", __progname);
+    if (quit)
+	printf("\r%s: SIGINT or SIGTERM received\n", __progname);
 
-	if (vFlag)
-		printf("%s: Exiting ...\n", __progname);
+    if (vFlag)
+	printf("%s: Exiting ...\n", __progname);
 
-	xfree(host);
-	xfree(mount);
-	playlist_free(&playlist);
+    xfree(host);
+    xfree(mount);
+    playlist_free(&playlist);
 
-	return (ez_shutdown(0));
+    return (ez_shutdown(0));
 }
