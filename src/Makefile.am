@@ -7,7 +7,6 @@ ezstream_SOURCES = \
 	compat.c \
 	configfile.c \
 	ezstream.c \
-	getopt.c \
 	metadata.c \
 	playlist.c \
 	util.c \

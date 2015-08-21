@@ -38,10 +38,9 @@ unsigned int	checkDecoderLine(const char *, const char *, long);
 unsigned int	checkEncoderLine(const char *, const char *, long);
 unsigned int	checkFormatLine(const char *, const char *, long);
 
-EZCONFIG *
-getEZConfig(void)
+EZCONFIG * getEZConfig(void)
 {
-	return (&ezConfig);
+    return (&ezConfig);
 }
 
 const char *

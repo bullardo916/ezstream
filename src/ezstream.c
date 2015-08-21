@@ -1151,7 +1151,7 @@ int			main(int argc, char **argv)
     qFlag = 0;
     vFlag = 0;
 
-    while ((c = local_getopt(argc, argv, "c:hmnqsVv")) != -1) {
+    while ((c = getopt(argc, argv, "c:hmnqsVv")) != -1) {
 	switch (c) {
 	case 'c':
 	    if (configFile != NULL) {

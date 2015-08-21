@@ -55,7 +55,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_ezstream_OBJECTS = compat.$(OBJEXT) configfile.$(OBJEXT) \
-	ezstream.$(OBJEXT) getopt.$(OBJEXT) metadata.$(OBJEXT) \
+	ezstream.$(OBJEXT) metadata.$(OBJEXT) \
 	playlist.$(OBJEXT) util.$(OBJEXT) xalloc.$(OBJEXT)
 ezstream_OBJECTS = $(am_ezstream_OBJECTS)
 ezstream_DEPENDENCIES = @LIBOBJS@
@@ -201,7 +201,6 @@ ezstream_SOURCES = \
 	compat.c \
 	configfile.c \
 	ezstream.c \
-	getopt.c \
 	metadata.c \
 	playlist.c \
 	util.c \
@@ -332,7 +331,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/configfile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ezstream.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/metadata.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/playlist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/util.Po@am__quote@
